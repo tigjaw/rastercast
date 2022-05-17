@@ -1,4 +1,4 @@
-# filetype-converter
+# Rastercast
 A small Java application to convert an image to a chosen filetype.
 
 These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
