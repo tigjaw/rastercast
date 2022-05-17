@@ -15,7 +15,7 @@ public class RastercastController {
 
 	public RastercastController() {
 		this(new String[] { "png", "jpg", "gif", "tif", });
-		// add bmp option
+		// add bmp option?
 	}
 
 	public RastercastController(String[] fileTypes) {
@@ -50,23 +50,26 @@ public class RastercastController {
 		}
 
 		final String parent = file.getParent();
-		log += "\n" + "File Path: " + parent;
+		// log += "\n" + "File Path: " + parent;
 
 		final String fileName = file.getName();
-		log += "\n" + "File Name: " + fileName;
+		// log += "\n" + "File Name: " + fileName;
 
 		final String strippedFileName = stripExtension(fileName, false);
-		log += "\n" + "Stripped File Name: " + strippedFileName;
+		// log += "\n" + "Stripped File Name: " + strippedFileName;
 
 		final String strippedFilePath = parent + "\\" + strippedFileName;
-		log += "\n" + "Stripped File Path: " + strippedFilePath;
+		// log += "\n" + "Stripped File Path: " + strippedFilePath;
 
 		final String fileType = (String) selectedItem;
-		log += "\n" + "Convert to: " + fileType;
+		// log += "\n" + "Convert to: " + fileType;
 		File outputfile = new File(strippedFilePath + "." + fileType);
 
 		if (deleteOriginal) {
 			file.delete();
+			log += "\n" + "Deleting Original";
+		} else {
+			log += "\n" + "Keeping Original";
 		}
 
 		try {
@@ -80,7 +83,16 @@ public class RastercastController {
 		return log;
 	}
 
-	private String stripExtension(String str, boolean wantExtension) {
+	/** Strips the string at the last index of the "." in the filename.
+	 * If getExtension is true, then it returns the stripped file-type (without
+	 * the file name) by returning the contents of the String after the "." in
+	 * the file-name. If getExtension is false, then it returns the stripped
+	 * file-name (without the file extension) by returning the contents of the
+	 * String prior to the "." in the file-name.
+	 * @param str (String) - the text to strip
+	 * @param getExtension (boolean)
+	 * @return (String) - the stripped String */
+	private String stripExtension(String str, boolean getExtension) {
 		if (str == null) {
 			return null;
 		}
@@ -91,10 +103,11 @@ public class RastercastController {
 			return str;
 		}
 
-		if (wantExtension) {
+		if (getExtension) {
+			// return the string, following the dot
 			return str.substring(pos + 1, str.length());
 		} else {
-			// Otherwise return the string, up to the dot.
+			// return the string, up to the dot.
 			return str.substring(0, pos);
 		}
 	}
