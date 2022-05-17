@@ -3,6 +3,8 @@ package controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -22,13 +24,22 @@ public class RastercastController {
 	}
 
 	public String loadFile(File file) {
-		this.file = file;
-		return "Opening: " + file.getName();
+		String fileType = stripExtension(file.getName(), true);
+
+		// Convert the array to list
+		List<String> list = Arrays.asList(fileTypes);
+
+		if (list.contains(fileType)) {
+			this.file = file;
+			return "Opening: " + file.getName();
+		} else {
+			return "file-type (." + fileType + ") not supported";
+		}
 	}
 
 	public String saveFile(Object selectedItem) {
-		BufferedImage input_image;
 		String log = "";
+		BufferedImage input_image;
 
 		try {
 			input_image = ImageIO.read(file);
@@ -44,7 +55,7 @@ public class RastercastController {
 		final String fileName = file.getName();
 		log += "\n" + "File Name: " + fileName;
 
-		final String strippedFileName = stripExtension(fileName);
+		final String strippedFileName = stripExtension(fileName, false);
 		log += "\n" + "Stripped File Name: " + strippedFileName;
 
 		final String strippedFilePath = parent + "\\" + strippedFileName;
@@ -69,7 +80,7 @@ public class RastercastController {
 		return log;
 	}
 
-	private String stripExtension(String str) {
+	private String stripExtension(String str, boolean wantExtension) {
 		if (str == null) {
 			return null;
 		}
@@ -79,8 +90,13 @@ public class RastercastController {
 		if (pos == -1) {
 			return str;
 		}
-		// Otherwise return the string, up to the dot.
-		return str.substring(0, pos);
+
+		if (wantExtension) {
+			return str.substring(pos + 1, str.length());
+		} else {
+			// Otherwise return the string, up to the dot.
+			return str.substring(0, pos);
+		}
 	}
 
 	public String[] getFileTypes() {
