@@ -4,13 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 public class RastercastController {
 	private String[] fileTypes;
-	private File file;
+	private List<File> images;
 	private boolean deleteOriginal;
 
 	public RastercastController() {
@@ -23,64 +24,73 @@ public class RastercastController {
 		this.deleteOriginal = false;
 	}
 
-	public String loadFile(File file) {
-		String fileType = stripExtension(file.getName(), true);
-
-		// Convert the array to list
+	public String loadFiles(File[] chosenFiles) {
+		images = new LinkedList<>();
 		List<String> list = Arrays.asList(fileTypes);
+		String successLog = "Opening: \n";
+		String failLog = "Unsupported file-types: \n";
 
-		if (list.contains(fileType)) {
-			this.file = file;
-			return "Opening: " + file.getName();
-		} else {
-			return "file-type (." + fileType + ") not supported";
+		for (File file : chosenFiles) {
+			String fileName = file.getName();
+			String fileType = stripExtension(fileName, true);
+
+			if (list.contains(fileType)) {
+				images.add(file);
+				successLog += fileName + "\n";
+			} else {
+				failLog += fileName + "\n";
+			}
 		}
+		return successLog + "\n" + failLog;
 	}
 
-	public String saveFile(Object selectedItem) {
-		String log = "";
-		BufferedImage input_image;
+	public String saveImages(String imgType) {
+		String successLog = "Saving: \n";
+		String failLog = "Failed to Save: \n";
 
-		try {
-			input_image = ImageIO.read(file);
-		} catch (IOException e2) {
-			log += "Failed to read image";
-			e2.printStackTrace();
-			return log;
+		for (File image : images) {
+			BufferedImage inputImg;
+
+			if (imgType.equals("jpg")) {
+				// image = new BufferedImage(BufferedImage.TYPE_INT_RGB);
+			}
+
+			final String parent = image.getParent();
+			final String fileName = image.getName();
+
+			try {
+				inputImg = ImageIO.read(image);
+			} catch (IOException e) {
+				failLog += image.getName();
+				e.printStackTrace();
+				continue;
+			}
+
+			final String strippedFileName = stripExtension(fileName, false);
+			final String strippedFilePath = parent + "\\" + strippedFileName;
+
+			File outputImg = new File(strippedFilePath + "." + imgType);
+
+			try {
+				successLog += "\n" + outputImg.getName();
+				ImageIO.write(inputImg, imgType, outputImg);
+			} catch (IOException e) {
+				failLog += "\n" + outputImg.getName();
+				e.printStackTrace();
+			}
 		}
+		return successLog + "\n" + failLog;
+	}
 
-		final String parent = file.getParent();
-		// log += "\n" + "File Path: " + parent;
-
-		final String fileName = file.getName();
-		// log += "\n" + "File Name: " + fileName;
-
-		final String strippedFileName = stripExtension(fileName, false);
-		// log += "\n" + "Stripped File Name: " + strippedFileName;
-
-		final String strippedFilePath = parent + "\\" + strippedFileName;
-		// log += "\n" + "Stripped File Path: " + strippedFilePath;
-
-		final String fileType = (String) selectedItem;
-		// log += "\n" + "Convert to: " + fileType;
-		File outputfile = new File(strippedFilePath + "." + fileType);
-
-		if (deleteOriginal) {
-			file.delete();
-			log += "\n" + "Deleting Original";
+	public String deleteImages(boolean delete) {
+		if (delete) {
+			for (File image : images) {
+				image.delete();
+			}
+			return "\n" + "Deleting Originals";
 		} else {
-			log += "\n" + "Keeping Original";
+			return "\n" + "Keeping Originals";
 		}
-
-		try {
-			log += "\n" + "Saving: " + strippedFileName + "." + fileType;
-			ImageIO.write(input_image, fileType, outputfile);
-			log += "\n" + "Image Converted Successfully!";
-		} catch (IOException e1) {
-			log += "\n" + "Failed to write file";
-			e1.printStackTrace();
-		}
-		return log;
 	}
 
 	/** Strips the string at the last index of the "." in the filename.
@@ -120,16 +130,12 @@ public class RastercastController {
 		this.fileTypes = fileTypes;
 	}
 
-	public File getFile() {
-		return file;
+	public List<File> getImages() {
+		return images;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public String getFileName() {
-		return file.getName();
+	public void setImages(List<File> images) {
+		this.images = images;
 	}
 
 	public boolean isDeleteOriginal() {
