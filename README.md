@@ -5,7 +5,7 @@ These features were written as part of a larger application but I decided to upl
 
 ## Features:
 - select an image
-- choose a file-type (".png", ".jpg", ".bmp", ".gif", ".tiff")
+- choose a file-type (png, jpg, bmp, gif, tiff)
 - delete original - yes/no option
 - save as chosen filetype
 
