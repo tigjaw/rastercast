@@ -45,7 +45,7 @@
   </div>
     
   <div id="gui">
-    <h2>GUI:</h2>
+    <h2>GUI</h2>
     <img src="https://user-images.githubusercontent.com/104085258/169087295-da21f64c-8993-45c1-8bad-973850575cb9.png"/>
   </div>
 
