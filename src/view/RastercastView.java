@@ -130,7 +130,7 @@ public class RastercastView {
 	private void loadImages() {
 		final int returnVal = fileChooser.showOpenDialog(mainPanel);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			log(controller.loadFiles(fileChooser.getSelectedFiles()));
+			log(controller.loadImages(fileChooser.getSelectedFiles()));
 		} else {
 			log("Open command cancelled by user.");
 		}

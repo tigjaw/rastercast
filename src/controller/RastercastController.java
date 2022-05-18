@@ -24,7 +24,7 @@ public class RastercastController {
 		this.deleteOriginal = false;
 	}
 
-	public String loadFiles(File[] chosenFiles) {
+	public String loadImages(File[] chosenFiles) {
 		images = new LinkedList<>();
 		List<String> list = Arrays.asList(fileTypes);
 		String successLog = "Opening: \n";
@@ -45,23 +45,28 @@ public class RastercastController {
 	}
 
 	public String saveImages(String imgType) {
-		String successLog = "Saving: \n";
-		String failLog = "Failed to Save: \n";
+		String successLog = "\n Saving:\n";
+		String failLog = "\n Failed to Save:\n";
 
-		for (File image : images) {
+		for (File file : images) {
 			BufferedImage inputImg;
 
-			if (imgType.equals("jpg")) {
-				// image = new BufferedImage(BufferedImage.TYPE_INT_RGB);
-			}
-
-			final String parent = image.getParent();
-			final String fileName = image.getName();
+			final String parent = file.getParent();
+			final String fileName = file.getName();
 
 			try {
-				inputImg = ImageIO.read(image);
+				inputImg = ImageIO.read(file);
+
+				if (imgType.equals("jpg")) {
+					int width = inputImg.getWidth();
+					int height = inputImg.getHeight();
+					int type = BufferedImage.TYPE_INT_RGB;
+					BufferedImage jpg = new BufferedImage(width, height, type);
+					jpg.getGraphics().drawImage(inputImg, 0, 0, null);
+					inputImg = jpg;
+				}
 			} catch (IOException e) {
-				failLog += image.getName();
+				failLog += file.getName();
 				e.printStackTrace();
 				continue;
 			}
@@ -72,8 +77,12 @@ public class RastercastController {
 			File outputImg = new File(strippedFilePath + "." + imgType);
 
 			try {
-				successLog += "\n" + outputImg.getName();
-				ImageIO.write(inputImg, imgType, outputImg);
+				boolean written = ImageIO.write(inputImg, imgType, outputImg);
+				if (written) {
+					successLog += "\n" + outputImg.getName();
+				} else {
+					throw new IOException();
+				}
 			} catch (IOException e) {
 				failLog += "\n" + outputImg.getName();
 				e.printStackTrace();
@@ -84,8 +93,8 @@ public class RastercastController {
 
 	public String deleteImages(boolean delete) {
 		if (delete) {
-			for (File image : images) {
-				image.delete();
+			for (File img : images) {
+				img.delete();
 			}
 			return "\n" + "Deleting Originals";
 		} else {
