@@ -13,3 +13,6 @@ These features were written as part of a larger application but I decided to upl
 ## Todo:
 - drag-and-drop image to gui
 - select new save location
+
+## GUI:
+![rastercast](https://user-images.githubusercontent.com/104085258/169087295-da21f64c-8993-45c1-8bad-973850575cb9.png)
