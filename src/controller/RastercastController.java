@@ -4,13 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 public class RastercastController {
 	private String[] fileTypes;
-	private File file;
+	private List<File> images;
 	private boolean deleteOriginal;
 
 	public RastercastController() {
@@ -23,64 +24,82 @@ public class RastercastController {
 		this.deleteOriginal = false;
 	}
 
-	public String loadFile(File file) {
-		String fileType = stripExtension(file.getName(), true);
-
-		// Convert the array to list
+	public String loadImages(File[] chosenFiles) {
+		images = new LinkedList<>();
 		List<String> list = Arrays.asList(fileTypes);
+		String successLog = "Opening: \n";
+		String failLog = "Unsupported file-types: \n";
 
-		if (list.contains(fileType)) {
-			this.file = file;
-			return "Opening: " + file.getName();
-		} else {
-			return "file-type (." + fileType + ") not supported";
+		for (File file : chosenFiles) {
+			String fileName = file.getName();
+			String fileType = stripExtension(fileName, true);
+
+			if (list.contains(fileType)) {
+				images.add(file);
+				successLog += fileName + "\n";
+			} else {
+				failLog += fileName + "\n";
+			}
 		}
+		return successLog + "\n" + failLog;
 	}
 
-	public String saveFile(Object selectedItem) {
-		String log = "";
-		BufferedImage input_image;
+	public String saveImages(String imgType) {
+		String successLog = "\n Saving:\n";
+		String failLog = "\n Failed to Save:\n";
 
-		try {
-			input_image = ImageIO.read(file);
-		} catch (IOException e2) {
-			log += "Failed to read image";
-			e2.printStackTrace();
-			return log;
+		for (File file : images) {
+			BufferedImage inputImg;
+
+			final String parent = file.getParent();
+			final String fileName = file.getName();
+
+			try {
+				inputImg = ImageIO.read(file);
+
+				if (imgType.equals("jpg")) {
+					int width = inputImg.getWidth();
+					int height = inputImg.getHeight();
+					int type = BufferedImage.TYPE_INT_RGB;
+					BufferedImage jpg = new BufferedImage(width, height, type);
+					jpg.getGraphics().drawImage(inputImg, 0, 0, null);
+					inputImg = jpg;
+				}
+			} catch (IOException e) {
+				failLog += file.getName();
+				e.printStackTrace();
+				continue;
+			}
+
+			final String strippedFileName = stripExtension(fileName, false);
+			final String strippedFilePath = parent + "\\" + strippedFileName;
+
+			File outputImg = new File(strippedFilePath + "." + imgType);
+
+			try {
+				boolean written = ImageIO.write(inputImg, imgType, outputImg);
+				if (written) {
+					successLog += "\n" + outputImg.getName();
+				} else {
+					throw new IOException();
+				}
+			} catch (IOException e) {
+				failLog += "\n" + outputImg.getName();
+				e.printStackTrace();
+			}
 		}
+		return successLog + "\n" + failLog;
+	}
 
-		final String parent = file.getParent();
-		// log += "\n" + "File Path: " + parent;
-
-		final String fileName = file.getName();
-		// log += "\n" + "File Name: " + fileName;
-
-		final String strippedFileName = stripExtension(fileName, false);
-		// log += "\n" + "Stripped File Name: " + strippedFileName;
-
-		final String strippedFilePath = parent + "\\" + strippedFileName;
-		// log += "\n" + "Stripped File Path: " + strippedFilePath;
-
-		final String fileType = (String) selectedItem;
-		// log += "\n" + "Convert to: " + fileType;
-		File outputfile = new File(strippedFilePath + "." + fileType);
-
-		if (deleteOriginal) {
-			file.delete();
-			log += "\n" + "Deleting Original";
+	public String deleteImages(boolean delete) {
+		if (delete) {
+			for (File img : images) {
+				img.delete();
+			}
+			return "\n" + "Deleting Originals";
 		} else {
-			log += "\n" + "Keeping Original";
+			return "\n" + "Keeping Originals";
 		}
-
-		try {
-			log += "\n" + "Saving: " + strippedFileName + "." + fileType;
-			ImageIO.write(input_image, fileType, outputfile);
-			log += "\n" + "Image Converted Successfully!";
-		} catch (IOException e1) {
-			log += "\n" + "Failed to write file";
-			e1.printStackTrace();
-		}
-		return log;
 	}
 
 	/** Strips the string at the last index of the "." in the filename.
@@ -120,16 +139,12 @@ public class RastercastController {
 		this.fileTypes = fileTypes;
 	}
 
-	public File getFile() {
-		return file;
+	public List<File> getImages() {
+		return images;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	public String getFileName() {
-		return file.getName();
+	public void setImages(List<File> images) {
+		this.images = images;
 	}
 
 	public boolean isDeleteOriginal() {

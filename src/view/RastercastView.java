@@ -71,6 +71,7 @@ public class RastercastView {
 		log.setEditable(false);
 
 		fileChooser = new JFileChooser();
+		fileChooser.setMultiSelectionEnabled(true);
 		fileTypeChooser = new JComboBox<String>(controller.getFileTypes());
 
 		openButton = new JButton("Open a File...");
@@ -101,7 +102,7 @@ public class RastercastView {
 		openButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				loadFile();
+				loadImages();
 			}
 		});
 
@@ -109,15 +110,8 @@ public class RastercastView {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveFile();
-			}
-		});
-
-		deleteCheckBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				deleteOriginal();
+				saveImages();
+				deleteOriginals();
 			}
 		});
 	}
@@ -133,21 +127,25 @@ public class RastercastView {
 		frame.setVisible(true);
 	}
 
-	private void loadFile() {
+	private void loadImages() {
 		final int returnVal = fileChooser.showOpenDialog(mainPanel);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			log(controller.loadFile(fileChooser.getSelectedFile()));
+			log(controller.loadImages(fileChooser.getSelectedFiles()));
 		} else {
 			log("Open command cancelled by user.");
 		}
 	}
 
-	private void deleteOriginal() {
-		controller.setDeleteOriginal(deleteCheckBox.isSelected());
+	private void deleteOriginals() {
+		boolean deleteOrignals = deleteCheckBox.isSelected();
+		String log = controller.deleteImages(deleteOrignals);
+		log(log);
 	}
 
-	private void saveFile() {
-		log(controller.saveFile(fileTypeChooser.getSelectedItem()));
+	private void saveImages() {
+		String fileType = (String) fileTypeChooser.getSelectedItem();
+		String log = controller.saveImages(fileType);
+		log(log);
 	}
 
 	private void log(String logThis) {
