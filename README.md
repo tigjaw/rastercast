@@ -35,9 +35,9 @@
   <div id="todo" align="right">
     <h2>Todo:</h2>
     <p>
-      select save location <
+      add optional new save location <
       <br>
-      add filename suffix/prefix <
+      add optional filename suffix/prefix <
     </p>
   </div>
     
