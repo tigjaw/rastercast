@@ -1,9 +1,9 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,9 +25,9 @@ public class RastercastView {
 	private JScrollPane logScrollPane;
 	private JButton openButton, saveButton;
 	private JCheckBox deleteCheckBox;
-	private JTextArea log;
+	private JTextArea logArea;
 	private JFileChooser fileChooser;
-	private JComboBox<String> fileTypeChooser;
+	private JComboBox<String> fileTypeComboBox;
 
 	public RastercastView() {
 		this(new RastercastController());
@@ -41,7 +41,6 @@ public class RastercastView {
 	private void createAndShowGUI() {
 		manageUI();
 		createComponents();
-		createPanels();
 		addComponents();
 		addActions();
 		showFrame();
@@ -61,36 +60,33 @@ public class RastercastView {
 			e.printStackTrace();
 		}
 		// Turn off metal's use of bold fonts
-		UIManager.put("swing.boldMetal", Boolean.FALSE);
+		// UIManager.put("swing.boldMetal", Boolean.FALSE);
 	}
 
 	private void createComponents() {
-		// create UI components
-		log = new JTextArea(25, 25);
-		log.setMargin(new Insets(5, 5, 5, 5));
-		log.setEditable(false);
+		Buildable comp = new ComponentCreator(this);
 
-		fileChooser = new JFileChooser();
-		fileChooser.setMultiSelectionEnabled(true);
-		fileTypeChooser = new JComboBox<String>(controller.getFileTypes());
+		// create UI components
+		logArea = comp.createLogArea();
+
+		fileChooser = comp.createFileChooser("Rastercast > Open Images...");
+		fileTypeComboBox = comp.createFileTypeComboBox();
 
 		openButton = new JButton("Open a File...");
 		saveButton = new JButton("Save a File as...");
-		deleteCheckBox = new JCheckBox("Delete Original");
-	}
+		deleteCheckBox = new JCheckBox("Delete Originals");
 
-	private void createPanels() {
 		// create UI panels
 		mainPanel = new JPanel(new BorderLayout());
 		buttonPanel = new JPanel();
-		logScrollPane = new JScrollPane(log);
+		logScrollPane = new JScrollPane(logArea);
 	}
 
 	private void addComponents() {
 		// add components to panels
 		buttonPanel.add(openButton);
 		buttonPanel.add(saveButton);
-		buttonPanel.add(fileTypeChooser);
+		buttonPanel.add(fileTypeComboBox);
 		buttonPanel.add(deleteCheckBox);
 
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_START);
@@ -107,7 +103,6 @@ public class RastercastView {
 		});
 
 		saveButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveImages();
@@ -136,25 +131,25 @@ public class RastercastView {
 		}
 	}
 
+	private void saveImages() {
+		String fileType = (String) fileTypeComboBox.getSelectedItem();
+		String log = controller.saveImages(fileType);
+		log(log);
+	}
+
 	private void deleteOriginals() {
 		boolean deleteOrignals = deleteCheckBox.isSelected();
 		String log = controller.deleteImages(deleteOrignals);
 		log(log);
 	}
 
-	private void saveImages() {
-		String fileType = (String) fileTypeChooser.getSelectedItem();
-		String log = controller.saveImages(fileType);
-		log(log);
-	}
-
 	private void log(String logThis) {
-		log.append(logThis + "\n");
+		logArea.append(logThis + "\n");
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	protected static ImageIcon createImageIcon(String path) {
-		java.net.URL imgURL = RastercastView.class.getResource(path);
+		URL imgURL = RastercastView.class.getResource(path);
 		if (imgURL != null) {
 			return new ImageIcon(imgURL);
 		} else {
@@ -163,12 +158,8 @@ public class RastercastView {
 		}
 	}
 
-	public JComboBox<String> getFileType() {
-		return fileTypeChooser;
-	}
-
-	public void setFileType(JComboBox<String> fileType) {
-		this.fileTypeChooser = fileType;
+	public void setFileType(JComboBox<String> fileTypeComboBox) {
+		this.fileTypeComboBox = fileTypeComboBox;
 	}
 
 	public RastercastController getController() {
@@ -227,12 +218,12 @@ public class RastercastView {
 		this.deleteCheckBox = deleteCheckBox;
 	}
 
-	public JTextArea getLog() {
-		return log;
+	public JTextArea getLogArea() {
+		return logArea;
 	}
 
-	public void setLog(JTextArea log) {
-		this.log = log;
+	public void setLogArea(JTextArea logArea) {
+		this.logArea = logArea;
 	}
 
 	public JFileChooser getFileChooser() {
@@ -243,11 +234,12 @@ public class RastercastView {
 		this.fileChooser = fileChooser;
 	}
 
-	public JComboBox<String> getFileTypeChooser() {
-		return fileTypeChooser;
+	public JComboBox<String> getFileTypeComboBox() {
+		return fileTypeComboBox;
 	}
 
-	public void setFileTypeChooser(JComboBox<String> fileTypeChooser) {
-		this.fileTypeChooser = fileTypeChooser;
+	public void setFileTypeComboBox(JComboBox<String> fileTypeComboBox) {
+		this.fileTypeComboBox = fileTypeComboBox;
 	}
+
 }
