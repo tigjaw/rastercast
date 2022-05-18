@@ -41,6 +41,9 @@
       <li>
         add optional filename suffix/prefix
       </li>
+      <li>
+        move save-options into separate dialog
+      </li>
     </ul>
   </div>
     
