@@ -5,7 +5,7 @@ These features were written as part of a larger application but I decided to upl
 
 ## Features:
 - supported file-types: png, jpg, gif, tiff
-- select an image (or multiple)
+- select an image (or multiple) to convert
 - choose a file-type to save to
 - delete original image - yes/no option
 - save as chosen filetype
