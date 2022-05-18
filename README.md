@@ -32,13 +32,16 @@
     </ul>
   </div>
   
-  <div id="todo" align="right">
+  <div id="todo">
     <h2>Todo:</h2>
-    <p>
-      add optional new save location <
-      <br>
-      add optional filename suffix/prefix <
-    </p>
+    <ul dir="rtl">
+      <li>
+        add optional new save location
+      </li>
+      <li>
+        add optional filename suffix/prefix
+      </li>
+    </ul>
   </div>
     
   <div id="gui">
