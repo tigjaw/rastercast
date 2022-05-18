@@ -12,7 +12,7 @@
   </div>
     
   <div id="features">
-    <h2>Features:</h2>
+    <h2>Features</h2>
     <ul>
       <li>
         supported file-types: png, jpg, gif, tiff
@@ -32,8 +32,8 @@
     </ul>
   </div>
   
-  <div id="todo">
-    <h2>Todo:</h2>
+  <div id="todo" align="right">
+    <h2>Todo</h2>
     <ul dir="rtl">
       <li>
         add optional new save location
