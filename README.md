@@ -29,6 +29,9 @@
       <li>
         save as chosen filetype
       </li>
+      <li>
+        logs all events to a text area
+      </li>
     </ul>
   </div>
   
@@ -43,6 +46,9 @@
       </li>
       <li>
         move save-options into separate dialog
+      </li>
+      <li>
+        replace logging system
       </li>
     </ul>
   </div>
