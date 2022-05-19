@@ -38,6 +38,8 @@ public class RastercastView {
 		createAndShowGUI();
 	}
 
+	// GUI METHODS
+
 	private void createAndShowGUI() {
 		manageUI();
 		createComponents();
@@ -49,7 +51,7 @@ public class RastercastView {
 	private void manageUI() {
 		// set look and feel
 		try {
-			UIManager.setLookAndFeel(LookFeel.WINDOWS);
+			UIManager.setLookAndFeel(UIValues.LF_WINDOWS);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -69,12 +71,12 @@ public class RastercastView {
 		// create UI components
 		logArea = comp.createLogArea();
 
-		fileChooser = comp.createFileChooser("Rastercast > Open Images...");
+		fileChooser = comp.createFileChooser(UIValues.TXT_CHOOSER);
 		fileTypeComboBox = comp.createFileTypeComboBox();
 
-		openButton = new JButton("Open a File...");
-		saveButton = new JButton("Save a File as...");
-		deleteCheckBox = new JCheckBox("Delete Originals");
+		openButton = new JButton(UIValues.TXT_OPEN);
+		saveButton = new JButton(UIValues.TXT_SAVE);
+		deleteCheckBox = new JCheckBox(UIValues.TXT_DELETE);
 
 		// create UI panels
 		mainPanel = new JPanel(new BorderLayout());
@@ -112,7 +114,7 @@ public class RastercastView {
 	}
 
 	private void showFrame() {
-		JFrame frame = new JFrame("Rastercast");
+		JFrame frame = new JFrame(UIValues.TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.add(mainPanel);
@@ -122,12 +124,14 @@ public class RastercastView {
 		frame.setVisible(true);
 	}
 
+	// CONTROLLER METHODS
+
 	private void loadImages() {
 		final int returnVal = fileChooser.showOpenDialog(mainPanel);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			log(controller.loadImages(fileChooser.getSelectedFiles()));
 		} else {
-			log("Open command cancelled by user.");
+			log("No Files Selected.");
 		}
 	}
 
@@ -143,10 +147,6 @@ public class RastercastView {
 		log(log);
 	}
 
-	private void log(String logThis) {
-		logArea.append(logThis + "\n");
-	}
-
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	protected static ImageIcon createImageIcon(String path) {
 		URL imgURL = RastercastView.class.getResource(path);
@@ -157,6 +157,16 @@ public class RastercastView {
 			return null;
 		}
 	}
+
+	// LOGGINS
+
+	/** Logs info to Log JTextArea
+	 * @param logThis (String) - text to log */
+	private void log(String logThis) {
+		logArea.append(logThis + "\n");
+	}
+
+	// GETTERS & SETTERS
 
 	public void setFileType(JComboBox<String> fileTypeComboBox) {
 		this.fileTypeComboBox = fileTypeComboBox;

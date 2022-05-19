@@ -5,7 +5,8 @@ import javax.swing.SwingUtilities;
 import controller.RastercastController;
 import view.RastercastView;
 
-/** Can convert between the following image formats: jpg, png, tiff, gif
+/** Can convert between several image formats, in any direction.
+ * See the default formats in the UIValues class.
  * @author Tigjaw */
 public class RunRastercast implements Runnable {
 
