@@ -10,6 +10,8 @@
     These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
     </p>
   </div>
+  
+  <hr>
     
   <div id="features">
     <h2>Features</h2>
@@ -52,6 +54,8 @@
       </li>
     </ul>
   </div>
+  
+  <hr>
     
   <!--
     1 image per row = 90%
