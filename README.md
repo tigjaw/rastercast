@@ -61,10 +61,10 @@
   -->
   <div id="gui" align="center">
     <h2>GUI</h2>
-    <img src="https://user-images.githubusercontent.com/104085258/169347232-bd84e5a9-667d-4091-8a21-638432111b8a.png" width="23%"></img>
-    <img src="https://user-images.githubusercontent.com/104085258/169347243-b5822031-9c52-41a4-bed2-56bed455addb.png" width="23%"></img>
-    <img src="https://user-images.githubusercontent.com/104085258/169347259-59809dcf-ab43-47ec-930c-b7feef4baec5.png" width="23%"></img>
-    <img src="https://user-images.githubusercontent.com/104085258/169347274-f653da06-72fc-4a71-b33a-4cec0f27debe.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/1-rastercast-main.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/2-rastercast-open.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/3-rastercast-opened.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/4-rastercast-saved.png" width="23%"></img>
   </div>
 
 </body>
