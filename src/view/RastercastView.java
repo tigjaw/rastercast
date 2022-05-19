@@ -131,7 +131,7 @@ public class RastercastView {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			log(controller.loadImages(fileChooser.getSelectedFiles()));
 		} else {
-			log("No Files Selected.");
+			log("\nNo Files Selected.");
 		}
 	}
 

@@ -27,6 +27,7 @@ public class RastercastController {
 	}
 
 	public RastercastController(ImageFormats imageFormats) {
+		this.images = new LinkedList<>();
 		this.imageFormats = imageFormats;
 		this.deleteOriginals = false;
 	}
@@ -34,9 +35,9 @@ public class RastercastController {
 	// CONTROLLER METHODS
 
 	public String loadImages(File[] selectedImages) {
+		String successLog = "";
+		String failLog = "";
 		images = new LinkedList<>();
-		String successLog = "Opening: \n";
-		String failLog = "Unsupported file-types: \n";
 
 		for (File image : selectedImages) {
 			String fileName = image.getName();
@@ -44,17 +45,24 @@ public class RastercastController {
 
 			if (imageFormats.contains(extension)) {
 				images.add(image);
-				successLog += fileName + "\n";
+				successLog += "\n> " + fileName;
 			} else {
-				failLog += fileName + "\n";
+				failLog += "\n\t> " + fileName;
 			}
 		}
-		return successLog + "\n" + failLog;
+
+		if (successLog.isEmpty() == false) {
+			successLog = "\nOpening:\n" + successLog;
+		}
+		if (failLog.isEmpty() == false) {
+			failLog = "\n\n\tUnsupported file-types:\n" + failLog;
+		}
+		return successLog + failLog;
 	}
 
-	public String saveImages(String imageType) {
-		String successLog = "\n Saving:\n";
-		String failLog = "\n Failed to Save:\n";
+	public String saveImages(String imageFormat) {
+		String successLog = "";
+		String failLog = "";
 
 		for (File file : images) {
 			BufferedImage inputImage;
@@ -65,7 +73,7 @@ public class RastercastController {
 			try {
 				inputImage = ImageIO.read(file);
 
-				if (imageType.equals("jpg")) {
+				if (imageFormat.equalsIgnoreCase("jpg")) {
 					int width = inputImage.getWidth();
 					int height = inputImage.getHeight();
 					int type = BufferedImage.TYPE_INT_RGB;
@@ -82,32 +90,29 @@ public class RastercastController {
 			final String strippedFileName = stripExtension(fileName, false);
 			final String strippedFilePath = parent + "\\" + strippedFileName;
 
-			File outputImage = new File(strippedFilePath + "." + imageType);
+			File outputImage = new File(strippedFilePath + "." + imageFormat);
 
 			try {
-				boolean written = ImageIO.write(inputImage, imageType, outputImage);
+				boolean written = ImageIO.write(inputImage, imageFormat, outputImage);
 				if (written) {
-					successLog += "\n" + outputImage.getName();
+					successLog += "\n> " + outputImage.getName();
 				} else {
 					throw new IOException();
 				}
 			} catch (IOException e) {
-				failLog += "\n" + outputImage.getName();
+				failLog += "\n\t> " + outputImage.getName();
 				e.printStackTrace();
 			}
 		}
-		return successLog + "\n" + failLog;
-	}
 
-	public String deleteImages(boolean delete) {
-		if (delete) {
-			for (File image : images) {
-				image.delete();
-			}
-			return "\n" + "Deleting Originals";
-		} else {
-			return "\n" + "Keeping Originals";
+		if (successLog.isEmpty() == false) {
+			successLog = "\nSaving:\n" + successLog;
 		}
+		if (failLog.isEmpty() == false) {
+			failLog = "\n\n\tFailed to Save:\n" + failLog;
+		}
+
+		return successLog + failLog;
 	}
 
 	/** Strips the string at the last index of the "." in the filename.
@@ -136,6 +141,20 @@ public class RastercastController {
 		} else {
 			// return the string, up to the dot.
 			return fileName.substring(0, dot);
+		}
+	}
+
+	/** Deletes the original files
+	 * @param delete (boolean) - delete files if true
+	 * @return (String) - text to log */
+	public String deleteImages(boolean delete) {
+		if (delete) {
+			for (File image : images) {
+				image.delete();
+			}
+			return "\n" + "Deleting Originals";
+		} else {
+			return "\n" + "Keeping Originals";
 		}
 	}
 
