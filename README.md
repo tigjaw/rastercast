@@ -49,8 +49,12 @@
     
   <div id="gui">
     <h2>GUI</h2>
-    <img src="https://user-images.githubusercontent.com/104085258/169087295-da21f64c-8993-45c1-8bad-973850575cb9.png"/>
   </div>
 
 </body>
 </html>
+
+![1-rastercast-main](https://user-images.githubusercontent.com/104085258/169347232-bd84e5a9-667d-4091-8a21-638432111b8a.png)
+![2-rastercast-open](https://user-images.githubusercontent.com/104085258/169347243-b5822031-9c52-41a4-bed2-56bed455addb.png)
+![3-rastercast-opened](https://user-images.githubusercontent.com/104085258/169347259-59809dcf-ab43-47ec-930c-b7feef4baec5.png)
+![4-rastercast-saved](https://user-images.githubusercontent.com/104085258/169347274-f653da06-72fc-4a71-b33a-4cec0f27debe.png)
