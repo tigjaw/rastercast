@@ -65,14 +65,21 @@ public class RastercastController {
 		String failLog = "";
 
 		for (File file : images) {
-			BufferedImage inputImage;
+			String parent = file.getParent();
+			String fileName = file.getName();
 
-			final String parent = file.getParent();
-			final String fileName = file.getName();
+			String strippedFileName = stripExtension(fileName, false);
+			String strippedFilePath = parent + "\\" + strippedFileName;
+
+			BufferedImage inputImage;
+			File outputImage = new File(strippedFilePath + "." + imageFormat);
+
+			boolean written = false;
 
 			try {
 				inputImage = ImageIO.read(file);
 
+				// jpg requires RGB colour model
 				if (imageFormat.equalsIgnoreCase("jpg")) {
 					int width = inputImage.getWidth();
 					int height = inputImage.getHeight();
@@ -81,27 +88,18 @@ public class RastercastController {
 					jpg.getGraphics().drawImage(inputImage, 0, 0, null);
 					inputImage = jpg;
 				}
+
+				written = ImageIO.write(inputImage, imageFormat, outputImage);
+
 			} catch (IOException e) {
-				failLog += file.getName();
+				written = false;
 				e.printStackTrace();
-				continue;
 			}
 
-			final String strippedFileName = stripExtension(fileName, false);
-			final String strippedFilePath = parent + "\\" + strippedFileName;
-
-			File outputImage = new File(strippedFilePath + "." + imageFormat);
-
-			try {
-				boolean written = ImageIO.write(inputImage, imageFormat, outputImage);
-				if (written) {
-					successLog += "\n> " + outputImage.getName();
-				} else {
-					throw new IOException();
-				}
-			} catch (IOException e) {
+			if (written) {
+				successLog += "\n> " + outputImage.getName();
+			} else {
 				failLog += "\n\t> " + outputImage.getName();
-				e.printStackTrace();
 			}
 		}
 
@@ -152,9 +150,9 @@ public class RastercastController {
 			for (File image : images) {
 				image.delete();
 			}
-			return "\n" + "Deleting Originals";
+			return "\n" + "Deleting Originals.";
 		} else {
-			return "\n" + "Keeping Originals";
+			return "\n" + "Keeping Originals.";
 		}
 	}
 
