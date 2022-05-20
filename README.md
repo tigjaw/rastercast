@@ -41,7 +41,7 @@
     <h2>Todo</h2>
     <ul dir="rtl">
       <li>
-        add optional new save location
+        add optional save location
       </li>
       <li>
         add optional filename suffix/prefix
