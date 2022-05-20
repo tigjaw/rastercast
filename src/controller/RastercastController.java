@@ -42,7 +42,6 @@ public class RastercastController {
 		for (File image : selectedImages) {
 			String fileName = image.getName();
 			String extension = stripExtension(fileName, true);
-
 			if (imageFormats.contains(extension)) {
 				images.add(image);
 				successLog += "\n> " + fileName;
