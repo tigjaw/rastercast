@@ -4,7 +4,7 @@
   <div id="header">
     <h1>Rastercast</h1>
     <p>
-    A small Java application to convert an image to a chosen filetype.
+    A small Java application to batch convert images to a chosen filetype.
     </p>
     <p>
     These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
@@ -20,7 +20,7 @@
         supported file-types: png, jpg, gif, tiff
       </li>
       <li>
-        select an image (or multiple) to convert
+        select an images to convert
       </li>
       <li>
         choose a file-type to save to: png, jpg, gif, tiff
