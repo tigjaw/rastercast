@@ -20,7 +20,7 @@
         supported file-types: png, jpg, gif, tiff
       </li>
       <li>
-        select an images to convert
+        select images to convert
       </li>
       <li>
         choose a file-type to save to: png, jpg, gif, tiff
