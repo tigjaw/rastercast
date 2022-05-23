@@ -49,9 +49,6 @@
       <li>
         move save-options into separate dialog
       </li>
-      <li>
-        replace logging system
-      </li>
     </ul>
   </div>
   
