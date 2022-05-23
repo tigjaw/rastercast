@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileFilter;
 
 import model.ImageFormats;
+import view.RLog;
 
 public class RastercastController {
 	private ImageFormats imageFormats;
@@ -35,8 +36,8 @@ public class RastercastController {
 	// CONTROLLER METHODS
 
 	public String loadImages(File[] selectedImages) {
-		String successLog = "";
-		String failLog = "";
+		RLog.action("Opened:");
+		RLog.actionFails("Failed to open:");
 		images = new LinkedList<>();
 
 		for (File image : selectedImages) {
@@ -44,24 +45,17 @@ public class RastercastController {
 			String extension = stripExtension(fileName, true);
 			if (imageFormats.contains(extension)) {
 				images.add(image);
-				successLog += "\n> " + fileName;
+				RLog.success(fileName);
 			} else {
-				failLog += "\n\t> " + fileName;
+				RLog.failure(fileName);
 			}
 		}
-
-		if (successLog.isEmpty() == false) {
-			successLog = "\nOpening:\n" + successLog;
-		}
-		if (failLog.isEmpty() == false) {
-			failLog = "\n\n\tUnsupported file-types:\n" + failLog;
-		}
-		return successLog + failLog;
+		return RLog.asString();
 	}
 
 	public String saveImages(String imageFormat) {
-		String successLog = "";
-		String failLog = "";
+		RLog.action("Saved:");
+		RLog.actionFails("Failed to save:");
 
 		for (File file : images) {
 			String parent = file.getParent();
@@ -77,39 +71,32 @@ public class RastercastController {
 
 			try {
 				inputImage = ImageIO.read(file);
-
-				// jpg requires RGB colour model
-				if (imageFormat.equalsIgnoreCase("jpg")) {
-					int width = inputImage.getWidth();
-					int height = inputImage.getHeight();
-					int type = BufferedImage.TYPE_INT_RGB;
-					BufferedImage jpg = new BufferedImage(width, height, type);
-					jpg.getGraphics().drawImage(inputImage, 0, 0, null);
-					inputImage = jpg;
-				}
-
+				inputImage = applyColorModel(imageFormat, inputImage);
 				written = ImageIO.write(inputImage, imageFormat, outputImage);
-
 			} catch (IOException e) {
-				written = false;
 				e.printStackTrace();
 			}
 
 			if (written) {
-				successLog += "\n> " + outputImage.getName();
+				RLog.success(fileName);
 			} else {
-				failLog += "\n\t> " + outputImage.getName();
+				RLog.failure(fileName);
 			}
 		}
 
-		if (successLog.isEmpty() == false) {
-			successLog = "\nSaving:\n" + successLog;
-		}
-		if (failLog.isEmpty() == false) {
-			failLog = "\n\n\tFailed to Save:\n" + failLog;
-		}
+		return RLog.asString();
+	}
 
-		return successLog + failLog;
+	private BufferedImage applyColorModel(String imageFormat, BufferedImage inputImage) {
+		if (imageFormat.equalsIgnoreCase("jpg")) {
+			int width = inputImage.getWidth();
+			int height = inputImage.getHeight();
+			int type = BufferedImage.TYPE_INT_RGB;
+			BufferedImage jpg = new BufferedImage(width, height, type);
+			jpg.getGraphics().drawImage(inputImage, 0, 0, null);
+			inputImage = jpg;
+		}
+		return inputImage;
 	}
 
 	/** Strips the string at the last index of the "." in the filename.
@@ -145,14 +132,15 @@ public class RastercastController {
 	 * @param delete (boolean) - delete files if true
 	 * @return (String) - text to log */
 	public String deleteImages(boolean delete) {
+		RLog.action("Deleted Originals.");
 		if (delete) {
 			for (File image : images) {
 				image.delete();
 			}
-			return "\n" + "Deleting Originals.";
 		} else {
-			return "\n" + "Keeping Originals.";
+			RLog.action("Kept Originals.");
 		}
+		return RLog.getACTION();
 	}
 
 	// GETTERS & SETTERS
