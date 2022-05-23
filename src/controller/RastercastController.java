@@ -71,12 +71,12 @@ public class RastercastController {
 
 			try {
 				inputImage = ImageIO.read(file);
-				inputImage = applyColorModel(imageFormat, inputImage);
-				written = ImageIO.write(inputImage, imageFormat, outputImage);
+				written = write(inputImage, imageFormat, outputImage);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
+			fileName = outputImage.getName();
 			if (written) {
 				RLog.success(fileName);
 			} else {
@@ -87,16 +87,9 @@ public class RastercastController {
 		return RLog.asString();
 	}
 
-	private BufferedImage applyColorModel(String imageFormat, BufferedImage inputImage) {
-		if (imageFormat.equalsIgnoreCase("jpg")) {
-			int width = inputImage.getWidth();
-			int height = inputImage.getHeight();
-			int type = BufferedImage.TYPE_INT_RGB;
-			BufferedImage jpg = new BufferedImage(width, height, type);
-			jpg.getGraphics().drawImage(inputImage, 0, 0, null);
-			inputImage = jpg;
-		}
-		return inputImage;
+	private boolean write(BufferedImage inputImage, String imageFormat, File outputImage) {
+		inputImage = imageFormats.applyColorModel(inputImage, imageFormat);
+		return imageFormats.encode(inputImage, imageFormat, outputImage);
 	}
 
 	/** Strips the string at the last index of the "." in the filename.

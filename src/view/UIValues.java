@@ -8,9 +8,6 @@ public class UIValues {
 	/** Text to describe type of file being handled */
 	public final static String TXT_FILE = "Images";
 
-	/** The default file formats */
-	public final static String[] FILE_FORMATS = new String[] { "png", "jpg", "gif", "tif", "bmp" };
-
 	// GUI LOOK & FEEL STRINGS
 
 	/** L&F for Linux and Solaris, if GTK+ 2.2 or later is installed */
