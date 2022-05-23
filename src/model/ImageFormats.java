@@ -16,71 +16,50 @@ public class ImageFormats {
 	private List<FileFilter> fileFilters;
 
 	public ImageFormats() {
-		this(new String[] { "png", "jpg", "gif", "tif", "bmp", "ico" });
+		fileFilters = new LinkedList<FileFilter>();
+		add("jpg", "jpeg");
+		add("tif", "tiff");
+		add("png");
+		add("gif");
+		add("bmp");
+		add("ico");
 	}
 
-	public ImageFormats(String[] fileExtensions) {
-		this.fileFilters = new LinkedList<FileFilter>();
+	public ImageFormats(FileFilter... filters) {
+		fileFilters = new LinkedList<FileFilter>();
+		for (FileFilter filter : filters) {
+			fileFilters.add(filter);
+		}
+	}
 
-		boolean parses = false;
-		for (String imageFormat : fileExtensions) {
-			parses = add(imageFormat);
-		}
-		if (!parses) {
-			System.out.println("no valid image format");
-		}
+	public ImageFormats(List<FileFilter> fileFilters) {
+		this.fileFilters = fileFilters;
 	}
 
 	// METHODS
 
-	protected boolean add(String imageFormat) {
-		FileFilter filter = createFileFilter(imageFormat);
-		if (filter != null) {
-			fileFilters.add(filter);
-			return true;
+	public void add(String... exts) {
+		FileFilter filter;
+		if (exts.length == 1) {
+			filter = createFilter(exts[0]);
 		} else {
-			return false;
+			filter = createFilter(exts[0], exts[1]);
 		}
+		fileFilters.add(filter);
 	}
 
-	private FileFilter createFileFilter(String fileExtension) {
-		FileFilter filter = null;
-		switch (fileExtension.toLowerCase()) {
-			case "jpg":
-			case "jpeg":
-				filter = createFilter("jpg", "jpeg");
-				break;
-			case "tif":
-			case "tiff":
-				filter = createFilter("tif", "tiff");
-				break;
-			case "png":
-				filter = createFilter("png");
-				break;
-			case "gif":
-				filter = createFilter("gif");
-				break;
-			case "bmp":
-				filter = createFilter("bmp");
-				break;
-			case "ico":
-				filter = createFilter("ico");
-				break;
-		}
-		return filter;
-	}
-
-	private FileNameExtensionFilter createFilter(String ext) {
+	public FileNameExtensionFilter createFilter(String ext) {
 		return new FileNameExtensionFilter(ext, ext);
 	}
 
-	private FileNameExtensionFilter createFilter(String ext1, String ext2) {
+	public FileNameExtensionFilter createFilter(String ext1, String ext2) {
 		return new FileNameExtensionFilter(ext1, ext1, ext2);
 	}
 
 	public BufferedImage applyColorModel(BufferedImage inputImage, String imageFormat) {
 		switch (imageFormat.toLowerCase()) {
 			case "jpg":
+			case "jpeg":
 			case "bmp":
 				int width = inputImage.getWidth();
 				int height = inputImage.getHeight();

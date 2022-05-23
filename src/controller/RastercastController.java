@@ -23,7 +23,7 @@ public class RastercastController {
 		this(new ImageFormats());
 	}
 
-	public RastercastController(String[] imageFormats) {
+	public RastercastController(List<FileFilter> imageFormats) {
 		this(new ImageFormats(imageFormats));
 	}
 
@@ -38,6 +38,7 @@ public class RastercastController {
 	public String loadImages(File[] selectedImages) {
 		RLog.action("Opened:");
 		RLog.actionFails("Failed to open:");
+
 		images = new LinkedList<>();
 
 		for (File image : selectedImages) {
