@@ -41,6 +41,9 @@
     <h2>Todo</h2>
     <ul dir="rtl">
       <li>
+        convert to ico
+      </li>
+      <li>
         add optional save location
       </li>
       <li>
