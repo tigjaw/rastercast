@@ -17,13 +17,13 @@
     <h2>Features</h2>
     <ul>
       <li>
-        supported file-types: png, jpg, gif, tiff
+        supported file-types: png, jpg, gif, tif, bmp
       </li>
       <li>
         select images to convert
       </li>
       <li>
-        choose a file-type to save to: png, jpg, gif, tiff
+        choose a file-type to save to
       </li>
       <li>
         delete original images - yes/no checkbox
