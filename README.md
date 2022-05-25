@@ -3,13 +3,18 @@
   
   <div id="header">
     <h1>Rastercast</h1>
+    <h2>Included in this repo:</h2>
+    <ul>
+      <li>
+        RasterCast - a library which allows you to read and write various image file formats, including .ico files.
+      </li>
+      <li>
+        An application which utilises the library to batch convert images to a chosen raster filetype and create your own ico files.
+      </li>
+    </ul>
     <p>
-    A small Java application to batch convert images to a chosen raster filetype, including .ico files.
-    <br>
+    This code was written as part of a larger application but I decided to upload it individually and work on it as a side-project.
     Utilises the <a href="https://github.com/imcdonagh/image4j">imag4j</a> library to handle ico files. All other code is my own.
-    </p>
-    <p>
-    These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
     </p>
   </div>
   
