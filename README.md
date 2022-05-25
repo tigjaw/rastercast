@@ -17,7 +17,7 @@
     <h2>Features</h2>
     <ul>
       <li>
-        supported file-types: png, jpg, gif, tif, bmp
+        supported file-types: png, jpg, gif, tif, bmp, ico
       </li>
       <li>
         select images to convert
@@ -40,9 +40,6 @@
   <div id="todo" align="right">
     <h2>Todo</h2>
     <ul dir="rtl">
-      <li>
-        convert to ico
-      </li>
       <li>
         add optional save location
       </li>
