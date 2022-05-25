@@ -4,8 +4,9 @@
   <div id="header">
     <h1>Rastercast</h1>
     <p>
-    A small Java application to batch convert images to a chosen raster filetype.
-    Can also convert images to .ico, using the image4j library.
+    A small Java application to batch convert images to a chosen raster filetype, including .ico files.
+    <br>
+    Utilises the <a href="https://github.com/imcdonagh/image4j">imag4j</a> library to handle ico files. All other code is my own.
     </p>
     <p>
     These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
@@ -67,6 +68,11 @@
     <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/2-rastercast-open.png" width="23%"></img>
     <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/3-rastercast-opened.png" width="23%"></img>
     <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/4-rastercast-saved.png" width="23%"></img>
+  </div>
+  
+  <div id="credits">
+    <h2>Credits</h2>
+    - ico file handling by <a href="https://github.com/imcdonagh/image4j">imag4j</a>
   </div>
 
 </body>
