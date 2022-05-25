@@ -3,9 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -17,10 +15,11 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import controller.RastercastController;
+import controller.RCController;
+import utils.RCStrings;
 
-public class RastercastView {
-	private RastercastController controller;
+public class RCView {
+	private RCController controller;
 	private JPanel mainPanel, buttonPanel;
 	private JScrollPane logScrollPane;
 	private JButton openButton, saveButton;
@@ -29,11 +28,11 @@ public class RastercastView {
 	private JFileChooser fileChooser;
 	private JComboBox<String> fileTypeComboBox;
 
-	public RastercastView() {
-		this(new RastercastController());
+	public RCView() {
+		this(new RCController());
 	}
 
-	public RastercastView(RastercastController controller) {
+	public RCView(RCController controller) {
 		this.controller = controller;
 		createAndShowGUI();
 	}
@@ -51,7 +50,7 @@ public class RastercastView {
 	private void manageUI() {
 		// set look and feel
 		try {
-			UIManager.setLookAndFeel(UIValues.LF_WINDOWS);
+			UIManager.setLookAndFeel(RCStrings.LF_WINDOWS);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -66,22 +65,20 @@ public class RastercastView {
 	}
 
 	private void createComponents() {
-		Buildable comp = new ComponentCreator(this);
-
 		// create UI components
-		logArea = comp.createLogArea();
+		logArea = ComponentFactory.createLogArea();
 
-		fileChooser = comp.createFileChooser(UIValues.TXT_CHOOSER);
-		fileTypeComboBox = comp.createFileTypeComboBox();
+		fileChooser = ComponentFactory.createFileChooser();
+		fileTypeComboBox = ComponentFactory.createFileTypeComboBox();
 
-		openButton = new JButton(UIValues.TXT_OPEN);
-		saveButton = new JButton(UIValues.TXT_SAVE);
-		deleteCheckBox = new JCheckBox(UIValues.TXT_DELETE);
+		openButton = ComponentFactory.createOpenButton();
+		saveButton = ComponentFactory.createSaveButton();
+		deleteCheckBox = ComponentFactory.createCheckBox();
 
 		// create UI panels
-		mainPanel = new JPanel(new BorderLayout());
-		buttonPanel = new JPanel();
-		logScrollPane = new JScrollPane(logArea);
+		mainPanel = ComponentFactory.createMainPanel();
+		buttonPanel = ComponentFactory.createPanel();
+		logScrollPane = ComponentFactory.createScrollePane(logArea);
 	}
 
 	private void addComponents() {
@@ -114,7 +111,7 @@ public class RastercastView {
 	}
 
 	private void showFrame() {
-		JFrame frame = new JFrame(UIValues.TITLE);
+		JFrame frame = new JFrame(RCStrings.TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.add(mainPanel);
@@ -136,8 +133,8 @@ public class RastercastView {
 	}
 
 	private void saveImages() {
-		String fileType = (String) fileTypeComboBox.getSelectedItem();
-		String log = controller.saveImages(fileType);
+		String imageFormat = (String) fileTypeComboBox.getSelectedItem();
+		String log = controller.saveImages(imageFormat);
 		log(log);
 	}
 
@@ -147,18 +144,7 @@ public class RastercastView {
 		log(log);
 	}
 
-	/** Returns an ImageIcon, or null if the path was invalid. */
-	protected static ImageIcon createImageIcon(String path) {
-		URL imgURL = RastercastView.class.getResource(path);
-		if (imgURL != null) {
-			return new ImageIcon(imgURL);
-		} else {
-			System.err.println("Couldn't find file: " + path);
-			return null;
-		}
-	}
-
-	// LOGGINS
+	// LOG
 
 	/** Logs info to Log JTextArea
 	 * @param logThis (String) - text to log */
@@ -168,15 +154,11 @@ public class RastercastView {
 
 	// GETTERS & SETTERS
 
-	public void setFileType(JComboBox<String> fileTypeComboBox) {
-		this.fileTypeComboBox = fileTypeComboBox;
-	}
-
-	public RastercastController getController() {
+	public RCController getController() {
 		return controller;
 	}
 
-	public void setController(RastercastController controller) {
+	public void setController(RCController controller) {
 		this.controller = controller;
 	}
 

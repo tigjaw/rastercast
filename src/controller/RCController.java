@@ -7,90 +7,73 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileFilter;
 
-import model.ImageFormats;
-import view.RLog;
+import core.RasterCast;
+import utils.RCLog;
 
-public class RastercastController {
-	private ImageFormats imageFormats;
+public class RCController {
 	private List<File> images;
 	private boolean deleteOriginals;
 
 	// CONSTRUCTORS
 
-	public RastercastController() {
-		this(new ImageFormats());
-	}
-
-	public RastercastController(List<FileFilter> imageFormats) {
-		this(new ImageFormats(imageFormats));
-	}
-
-	public RastercastController(ImageFormats imageFormats) {
+	public RCController() {
 		this.images = new LinkedList<>();
-		this.imageFormats = imageFormats;
 		this.deleteOriginals = false;
 	}
 
 	// CONTROLLER METHODS
 
 	public String loadImages(File[] selectedImages) {
-		RLog.action("Opened:");
-		RLog.actionFails("Failed to open:");
+		RCLog.action("Opened:");
+		RCLog.actionFails("Failed to open:");
 
 		images = new LinkedList<>();
 
 		for (File image : selectedImages) {
+			boolean loaded = false;
 			String fileName = image.getName();
 			String extension = stripExtension(fileName, true);
-			if (imageFormats.contains(extension)) {
+			if (RasterCast.contains(extension)) {
 				images.add(image);
-				RLog.success(fileName);
-			} else {
-				RLog.failure(fileName);
+				loaded = true;
 			}
+			RCLog.log(fileName, loaded);
 		}
-		return RLog.asString();
+		return RCLog.asString();
 	}
 
 	public String saveImages(String imageFormat) {
-		RLog.action("Saved:");
-		RLog.actionFails("Failed to save:");
+		RCLog.action("Saved:");
+		RCLog.actionFails("Failed to save:");
 
 		for (File file : images) {
-			String parent = file.getParent();
-			String fileName = file.getName();
-
-			String strippedFileName = stripExtension(fileName, false);
-			String strippedFilePath = parent + "\\" + strippedFileName;
-
 			BufferedImage inputImage;
-			File outputImage = new File(strippedFilePath + "." + imageFormat);
+			File outputImage = createNewFile(file, imageFormat);
 
 			boolean written = false;
 
 			try {
 				inputImage = ImageIO.read(file);
-				written = write(inputImage, imageFormat, outputImage);
+				written = RasterCast.write(inputImage, imageFormat, outputImage);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			fileName = outputImage.getName();
-			if (written) {
-				RLog.success(fileName);
-			} else {
-				RLog.failure(fileName);
-			}
+			RCLog.log(outputImage.getName(), written);
 		}
 
-		return RLog.asString();
+		return RCLog.asString();
 	}
 
-	private boolean write(BufferedImage inputImage, String imageFormat, File outputImage) {
-		inputImage = imageFormats.applyColorModel(inputImage, imageFormat);
-		return imageFormats.encode(inputImage, imageFormat, outputImage);
+	private File createNewFile(File file, String imageFormat) {
+		String parent = file.getParent();
+		String fileName = file.getName();
+
+		String strippedFileName = stripExtension(fileName, false);
+		String strippedFilePath = parent + "\\" + strippedFileName;
+
+		return new File(strippedFilePath + "." + imageFormat);
 	}
 
 	/** Strips the string at the last index of the "." in the filename.
@@ -126,34 +109,18 @@ public class RastercastController {
 	 * @param delete (boolean) - delete files if true
 	 * @return (String) - text to log */
 	public String deleteImages(boolean delete) {
-		RLog.action("Deleted Originals.");
+		RCLog.action("Deleted Originals.");
 		if (delete) {
 			for (File image : images) {
 				image.delete();
 			}
 		} else {
-			RLog.action("Kept Originals.");
+			RCLog.action("Kept Originals.");
 		}
-		return RLog.getACTION();
+		return RCLog.getACTION();
 	}
 
 	// GETTERS & SETTERS
-
-	public String[] getImageTypesAsArray() {
-		return imageFormats.asArray();
-	}
-
-	public List<FileFilter> getFileFilters() {
-		return imageFormats.getFileFilters();
-	}
-
-	public ImageFormats getImageFormats() {
-		return imageFormats;
-	}
-
-	public void setImageFormats(ImageFormats imageFormats) {
-		this.imageFormats = imageFormats;
-	}
 
 	public List<File> getImages() {
 		return images;

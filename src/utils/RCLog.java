@@ -1,8 +1,8 @@
-package view;
+package utils;
 
 /** A very overengineered Log system for Rastercast
  * @author Tigjaw */
-public class RLog {
+public class RCLog {
 	private static String ACTION = "";
 	private static String ACTION_FAIL = "";
 	private static String SUCCESSES = "";
@@ -18,7 +18,7 @@ public class RLog {
 	/** Provide Label for Action Failures
 	 * @param fail */
 	public static void actionFails(String fail) {
-		ACTION_FAIL = append("\n\n\t", fail);
+		ACTION_FAIL = append("\n\t", fail);
 		FAILURES = "";
 	}
 
@@ -26,14 +26,22 @@ public class RLog {
 	 * @param log */
 	public static void success(String log) {
 		StringBuffer buffer = new StringBuffer(SUCCESSES);
-		SUCCESSES = append("\n> ", log, buffer);
+		SUCCESSES = append("> ", log, buffer);
 	}
 
 	/** Append an Action Failure
 	 * @param log */
 	public static void failure(String log) {
 		StringBuffer buffer = new StringBuffer(FAILURES);
-		FAILURES = append("\n\t> ", log, buffer);
+		FAILURES = append("\t> ", log, buffer);
+	}
+
+	public static void log(String log, boolean parsed) {
+		if (parsed) {
+			success(log);
+		} else {
+			failure(log);
+		}
 	}
 
 	private static String append(String indent, String log, StringBuffer buffer) {
