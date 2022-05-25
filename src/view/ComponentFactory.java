@@ -30,7 +30,7 @@ public class ComponentFactory {
 	}
 
 	public static JComboBox<String> createFileTypeComboBox() {
-		return new JComboBox<String>(RasterCast.imageFormatsAsArray());
+		return new JComboBox<String>(RasterCast.formatsAsArray());
 	}
 
 	public static JFileChooser createFileChooser() {

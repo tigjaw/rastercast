@@ -1,16 +1,15 @@
 package controller;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import core.RasterCast;
 import utils.RCLog;
 
+/** Controller for the RasterCast demo Application
+ * @author <a href="https://github.com/tigjaw">Tigjaw</a> (Joshua Woodyatt)
+ * @since 2022 */
 public class RCController {
 	private List<File> images;
 	private boolean deleteOriginals;
@@ -33,8 +32,7 @@ public class RCController {
 		for (File image : selectedImages) {
 			boolean loaded = false;
 			String fileName = image.getName();
-			String extension = stripExtension(fileName, true);
-			if (RasterCast.contains(extension)) {
+			if (isCompatible(fileName)) {
 				images.add(image);
 				loaded = true;
 			}
@@ -48,61 +46,13 @@ public class RCController {
 		RCLog.actionFails("Failed to save:");
 
 		for (File file : images) {
-			BufferedImage inputImage;
-			File outputImage = createNewFile(file, imageFormat);
-
+			File output = createNewFile(file, imageFormat);
 			boolean written = false;
-
-			try {
-				inputImage = ImageIO.read(file);
-				written = RasterCast.write(inputImage, imageFormat, outputImage);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			RCLog.log(outputImage.getName(), written);
+			written = write(file, imageFormat, output);
+			RCLog.log(output.getName(), written);
 		}
 
 		return RCLog.asString();
-	}
-
-	private File createNewFile(File file, String imageFormat) {
-		String parent = file.getParent();
-		String fileName = file.getName();
-
-		String strippedFileName = stripExtension(fileName, false);
-		String strippedFilePath = parent + "\\" + strippedFileName;
-
-		return new File(strippedFilePath + "." + imageFormat);
-	}
-
-	/** Strips the string at the last index of the "." in the filename.
-	 * If getExtension is true, then it returns the stripped file-type (without
-	 * the file name) by returning the contents of the String after the "." in
-	 * the file-name. If getExtension is false, then it returns the stripped
-	 * file-name (without the file extension) by returning the contents of the
-	 * String prior to the "." in the file-name.
-	 * @param fileName (String) - the text to strip
-	 * @param getExtension (boolean)
-	 * @return (String) - the stripped String */
-	private String stripExtension(String fileName, boolean getExtension) {
-		if (fileName == null) {
-			return null;
-		}
-		// Get position of last '.'.
-		int dot = fileName.lastIndexOf(".");
-		// If there wasn't any '.' just return the string as is.
-		if (dot == -1) {
-			return fileName;
-		}
-
-		if (getExtension) {
-			// return the string, following the dot
-			return fileName.substring(dot + 1, fileName.length());
-		} else {
-			// return the string, up to the dot.
-			return fileName.substring(0, dot);
-		}
 	}
 
 	/** Deletes the original files
@@ -118,6 +68,25 @@ public class RCController {
 			RCLog.action("Kept Originals.");
 		}
 		return RCLog.getACTION();
+	}
+
+	// RASTERCAST METHODS
+
+	private String stripExtension(String fileName) {
+		return RasterCast.stripExt(fileName, true);
+	}
+
+	private boolean isCompatible(String fileName) {
+		String extension = stripExtension(fileName);
+		return RasterCast.contains(extension);
+	}
+
+	private File createNewFile(File file, String imageFormat) {
+		return RasterCast.createNewFile(file, imageFormat);
+	}
+
+	private boolean write(File file, String imageFormat, File outputImage) {
+		return RasterCast.write(file, imageFormat, outputImage);
 	}
 
 	// GETTERS & SETTERS
