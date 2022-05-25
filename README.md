@@ -4,7 +4,8 @@
   <div id="header">
     <h1>Rastercast</h1>
     <p>
-    A small Java application to batch convert images to a chosen raster filetype, with the ability to create .ico files using the image4j library.
+    A small Java application to batch convert images to a chosen raster filetype.
+    Can also convert images to .ico, using the image4j library.
     </p>
     <p>
     These features were written as part of a larger application but I decided to upload it individually and work on it as a side-project.
