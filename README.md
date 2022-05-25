@@ -25,13 +25,13 @@
         select images to convert
       </li>
       <li>
-        choose a file-type to save to
+        choose a raster format to save as
       </li>
       <li>
-        delete original images - yes/no checkbox
+        option to delete original images
       </li>
       <li>
-        save as chosen filetype
+        save (as chosen image format)
       </li>
       <li>
         logs all events to a text area
