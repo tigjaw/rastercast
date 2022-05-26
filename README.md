@@ -70,10 +70,10 @@
   -->
   <div id="gui" align="center">
     <h2>GUI</h2>
-    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/1-rastercast-main.png" width="23%"></img>
-    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/2-rastercast-open.png" width="23%"></img>
-    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/3-rastercast-opened.png" width="23%"></img>
-    <img src="https://github.com/tigjaw/rastercast/blob/2bc43db316471c000f62705e8fcff8c39aac6741/screenshots/4-rastercast-saved.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/main/screenshots/1-rastercast-main.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/main/screenshots/2-rastercast-open.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/main/screenshots/3-rastercast-opened.png" width="23%"></img>
+    <img src="https://github.com/tigjaw/rastercast/blob/main/screenshots/4-rastercast-saved.png" width="23%"></img>
   </div>
   
   <div id="credits">
