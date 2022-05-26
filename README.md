@@ -13,7 +13,7 @@
       </li>
     </ul>
     <p>
-    This code was written as part of a larger application but I decided to upload it individually and work on it as a side-project.
+    I wrote this as part of a larger application but decided to upload it individually and work on it as a side-project.
     <br>
     Utilises the <a href="https://github.com/imcdonagh/image4j">imag4j</a> library to handle ico files. All other code is my own.
     </p>
