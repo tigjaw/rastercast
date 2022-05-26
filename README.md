@@ -2,7 +2,7 @@
 <body>
   
   <div id="header">
-    <h1>Rastercast</h1>
+    <h1>RasterCast</h1>
     <h2>Included in this repo:</h2>
     <ul>
       <li>
