@@ -72,13 +72,13 @@ public class RCController {
 
 	// RASTERCAST METHODS
 
-	private String stripExtension(String fileName) {
-		return RasterCast.stripExt(fileName, true);
-	}
-
 	private boolean isCompatible(String fileName) {
 		String extension = stripExtension(fileName);
 		return RasterCast.contains(extension);
+	}
+
+	private String stripExtension(String fileName) {
+		return RasterCast.stripExt(fileName, true);
 	}
 
 	private File createNewFile(File file, String imageFormat) {

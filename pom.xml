@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tigaw.rastercast</groupId>
 	<artifactId>rastercast</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	
 	<build>
 		<sourceDirectory>src</sourceDirectory>

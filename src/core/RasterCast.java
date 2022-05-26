@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.sf.image4j.codec.ico.ICOEncoder;
 
-/** {@link RasterCast} - batch image converter.
+/** {@link RasterCast} - a batch image converter.
  * <p>
  * Converts between various image formats and even create .ico files.
  * <p>
@@ -27,7 +27,15 @@ import net.sf.image4j.codec.ico.ICOEncoder;
  * </ul>
  * @author <a href="https://github.com/tigjaw">Tigjaw</a> (Joshua Woodyatt)
  * @since 2022
- * @see net.sf.image4j.codec.ico.ICOEncoder */
+ * @see javax.imageio.ImageIO
+ * @see net.sf.image4j.codec.ico.ICOEncoder
+ * @see java.awt.image.BufferedImage
+ * @see java.io.File
+ * @see javax.swing.filechooser.FileFilter
+ * @see javax.swing.filechooser.FileNameExtensionFilter
+ * @see java.util.LinkedList
+ * @see java.util.List
+ * @see java.io.IOException */
 public class RasterCast {
 	/** The {@link List} of compatible {@link FileFilter}s */
 	public static List<FileFilter> FILE_FILTERS;
@@ -44,46 +52,41 @@ public class RasterCast {
 
 	// PUBLIC METHODS
 
-	/** Use this method to add an additional file format to the list of
-	 * {@link RasterCast.FILE_FILTERS}.
+	/** Use this method to add an additional {@link FileFilter} to the list of
+	 * {@link RasterCast#FILE_FILTERS}.
 	 * <p>
-	 * Parse one string to add a {@link FileFilter} where the {@code FileFilter}
-	 * description is the same as its file extension.
-	 * <p>
-	 * Every additional parsed parameter will be an additional extension.
+	 * Every passed parameter will be added as an extension. The first parameter
+	 * will also be used as the {@link FileNameExtensionFilter#description}.
 	 * <p>
 	 * Example usages:
-	 * <p>
+	 * <br>
 	 * {@code add("png")}
-	 * <p>
+	 * <br>
 	 * {@code add("jpg", "jpeg")}
-	 * @param formats {@link String} to add */
+	 * @param formats ({@link String}) to add
+	 * @see FileNameExtensionFilter */
 	public static void add(String... formats) {
-		FileFilter filter;
-		if (formats.length == 1) {
-			filter = createFilter(formats[0]);
-		} else {
-			filter = createFilter(formats[0], formats[1]);
+		if (formats[0] != null) {
+			FILE_FILTERS.add(new FileNameExtensionFilter(formats[0], formats));
 		}
-		FILE_FILTERS.add(filter);
 	}
 
-	/** Takes a {@link List} of {@link File}s and outputs them as the chosen
-	 * format.
-	 * @param files {@link List<File>} to convert
+	/** Iterates through the a {@link List} of {@link File}s, writes them as the
+	 * chosen {@code format} using {@link #write(File, String)}.
+	 * @param files {@link List} of {@link File}s to convert
 	 * @param format {@link String} to convert to */
 	public static void write(List<File> files, String format) {
 		for (File file : files) {
-			File outputImage = createNewFile(file, format);
-			write(file, format, outputImage);
+			write(file, format);
 		}
 	}
 
 	/** Writes an image to the chosen file format using {@link ImageIO} or
 	 * {@link ICOEncoder}.
 	 * <p>
-	 * Checks if the chosen format is an ico or not and then writes to the
-	 * output {@link File}.
+	 * Calls {@link #read(File, String)} to read the image from the file and
+	 * returns the result as a {@link BufferedImage}, checks if the chosen
+	 * format is an ico or not, and finally, writes the file.
 	 * <p>
 	 * Use this write method if you wish to provide the output file yourself.
 	 * @param input ({@link File}) to be written.
@@ -109,9 +112,11 @@ public class RasterCast {
 	/** Writes an image to the chosen file format using {@link ImageIO} or
 	 * {@link ICOEncoder}.
 	 * <p>
-	 * Creates the output {@link File} from the input {@code File} parameter
-	 * with {@code createNewFile(input, format)}, checks if the chosen format is
-	 * an ico or not and then writes the file.
+	 * Calls {@link #read(File, String)} to read the image from the file and
+	 * returns the result as a {@link BufferedImage}. Builds the output
+	 * {@link File} from the {@code BufferedImage} with
+	 * {@link RasterCast#createNewFile(input, format)}, checks if the chosen
+	 * format is an ico or not, and finally, writes the file.
 	 * @param input ({@link File}) to be written.
 	 * @param format ({@link String}) to convert to.
 	 * @return ({@link Boolean}) - {@code false} if file was not written */
@@ -134,6 +139,9 @@ public class RasterCast {
 
 	/** Reads the input {@link File} using {@link ImageIO} and applies a colour
 	 * model in the case it is a "png" or "bmp" to be written.
+	 * <p>
+	 * Calls: {@link ImageIO#read(File)} and
+	 * {@link RasterCast#applyColorModel(BufferedImage, String)}
 	 * @param input ({@link File}) to be read.
 	 * @param format ({@link String}) to convert to.
 	 * @return {@link BufferedImage} to write
@@ -144,13 +152,18 @@ public class RasterCast {
 		return applyColorModel(inputImage, format);
 	}
 
-	/** Returns a new {@link File} with same name but with the specified file
-	 * format. Gets the parent and name from the {@code File}, strips the
-	 * extension from the name, and creates a new path with the specified format
-	 * appended onto the file name.
+	/** Returns a new {@link File} with same file name but with the file format
+	 * specified by the {@code format} parameter.
+	 * <p>
+	 * Gets the parent and name from the {@code File}, strips the extension from
+	 * the name by calling {@link RasterCast#stripExt(String, boolean)}, and
+	 * creates a new path with the specified format appended onto the file name.
 	 * @param file {@link File} to convert.
 	 * @param format {@link String} to convert to.
-	 * @return {@link File} with chosen format */
+	 * @return {@link File} with chosen format
+	 * @see File#getParent()
+	 * @see File#getName()
+	 * @see File#File(String) */
 	public static File createNewFile(File file, String format) {
 		String parent = file.getParent();
 		String fileName = file.getName();
@@ -161,9 +174,12 @@ public class RasterCast {
 		return new File(strippedFilePath + "." + format);
 	}
 
-	/** Checks if the passed string matches a compatible file extension.
-	 * Checks if the passed file extension is contained in the {@link List} of
-	 * {@link FileFilter}s
+	/** Checks if the passed {@link String} matches a compatible file extension
+	 * in {@link RasterCast#FILE_FILTERS}.
+	 * <p>
+	 * Iterates through {@link List} of {@link FileFilter}s and compares the
+	 * result of {@link FileFilter#getDescription()} to the {@code ext}
+	 * parameter.
 	 * @param ext {@link String} to check
 	 * @return {@link Boolean} - false if not compatible */
 	public static boolean contains(String ext) {
@@ -176,8 +192,11 @@ public class RasterCast {
 		return false;
 	}
 
-	/** Returns the {@link List} of {@link FileFilter} as an array
-	 * @return {@link String[]} of {@code FileFilter} */
+	/** Returns {@link RasterCast#FILE_FILTERS} as an array of Strings
+	 * containing only the description (i.e. the first extension).
+	 * @return {@link String[]} representation of
+	 *         {@link RasterCast#FILE_FILTERS}
+	 * @see FileFilter#getDescription() */
 	public static String[] formatsAsArray() {
 		int size = FILE_FILTERS.size();
 		String[] exts = new String[size];
@@ -192,7 +211,8 @@ public class RasterCast {
 		return exts;
 	}
 
-	/** Strips the string at the last index of the "." in the filename.
+	/** Strips the {@link String} at the last index of the "." in the filename
+	 * using {@link String#lastIndexOf(int)}
 	 * <p>
 	 * If {@code getExtension} is true, then it returns the stripped extension
 	 * (without the file name) by returning the contents of the String after the
@@ -226,29 +246,10 @@ public class RasterCast {
 
 	// PRIVATE METHODS
 
-	/** Creates a {@link FileFilter} for a file format that only has one file
-	 * extension, such as png, gif, and bmp.
-	 * @param ext {@link String} - the {@code FileNameExtensionFilter}
-	 *        description and extension
-	 * @return {@link FileNameExtensionFilter} with specified description and
-	 *         extension */
-	private static FileFilter createFilter(String ext) {
-		return new FileNameExtensionFilter(ext, ext);
-	}
-
-	/** Creates a {@link FileFilter} for a file format that has two file
-	 * extensions, such as jpg (jpeg) and tif (tiff)
-	 * @param ext1 {@link String} - the {@code FileNameExtensionFilter}
-	 *        description and first extension
-	 * @param ext2 {@link String} - the second file extension
-	 * @return {@link FileNameExtensionFilter} with specified description and
-	 *         extensions */
-	private static FileFilter createFilter(String ext1, String ext2) {
-		return new FileNameExtensionFilter(ext1, ext1, ext2);
-	}
-
-	/** Applies a colour model to the {@link BufferedImage} if the converted
-	 * file format is a bmp or jpg.
+	/** Applies a {@link BufferedImage#TYPE_INT_RGB} colour model to the
+	 * {@link BufferedImage} if the converted file format is a bmp or jpg.
+	 * <p>
+	 * Called by {@link RasterCast#read(File, String)}
 	 * @param inputImage {@link BufferedImage} to apply the colour model to
 	 * @param format {@link String} to convert to
 	 * @return {@link BufferedImage} with applied colour model */
