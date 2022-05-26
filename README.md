@@ -11,6 +11,9 @@
       <li>
         An application which utilises the library to batch convert images to a chosen raster filetype and create your own ico files.
       </li>
+      <li>
+        100% java!
+      </li>
     </ul>
     <p>
     I wrote this as part of a larger application but decided to upload it individually and work on it as a side-project.
