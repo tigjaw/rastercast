@@ -52,7 +52,7 @@
     <h2>Planned Features</h2>
     <ul dir="rtl">
       <li>
-        [library] provide paths instead of files
+        [library] provide additional write method with path parameters
       </li>
       <li>
         [application] add optional save location
