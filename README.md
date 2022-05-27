@@ -52,13 +52,13 @@
     <h2>Planned Features</h2>
     <ul dir="rtl">
       <li>
-        [library] provide additional write method with path parameters
+        [library] write method with path parameters
       </li>
       <li>
-        [application] add optional save location
+        [application] change save location
       </li>
       <li>
-        [application] add optional filename suffix/prefix
+        [application] change filename and add suffix/prefix
       </li>
       <li>
         [application] move save-options into separate dialog
