@@ -49,20 +49,34 @@
   </div>
   
   <div id="todo" align="right">
-    <h2>Todo</h2>
+    <h2>Planned Features</h2>
     <ul dir="rtl">
       <li>
-        add optional save location
+        [library] provide paths instead of files
       </li>
       <li>
-        add optional filename suffix/prefix
+        [application] add optional save location
       </li>
       <li>
-        move save-options into separate dialog
+        [application] add optional filename suffix/prefix
+      </li>
+      <li>
+        [application] move save-options into separate dialog
       </li>
     </ul>
   </div>
   
+  <div id="todo" align="right">
+    <h2>Current Issues</h2>
+    <ul dir="rtl">
+      <li>
+        [application] can't convert ico to another file
+      </li>
+      <li>
+        [application] can't compile multiple images into one ico
+      </li>
+    </ul>
+  </div>
   <hr>
     
   <!--
