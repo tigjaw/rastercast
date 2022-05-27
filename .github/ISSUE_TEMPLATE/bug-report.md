@@ -7,6 +7,8 @@ assignees: tigjaw
 
 ---
 
+Please search for a related issue before posting a new one. If the bug hasn't been reported yet, then please use this template to report a new one. Thank you.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
