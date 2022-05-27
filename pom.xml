@@ -5,7 +5,11 @@
 	<groupId>com.tigaw.rastercast</groupId>
 	<artifactId>rastercast</artifactId>
 	<version>1.0.0</version>
-	
+
+	<properties>
+		<myPath>${basedir}\libs\image4j\image4j-0.7.2.jar</myPath>
+	</properties>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -18,7 +22,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.jclarion/image4j 
 		<dependency>
@@ -28,11 +32,11 @@
 		</dependency>
 		-->
 		<dependency>
-	         <groupId>org.jclarion</groupId>
-	         <artifactId>image4j</artifactId>
-	         <scope>system</scope>
-	         <version>0.7.2</version>
-	         <systemPath>${basedir}\libs\image4j\image4j-0.7.2.jar</systemPath>
-		 </dependency>
+			<groupId>org.jclarion</groupId>
+			<artifactId>image4j</artifactId>
+			<scope>system</scope>
+			<version>0.7.2</version>
+			<systemPath>${myPath}</systemPath>
+		</dependency>
 	</dependencies>
 </project>
