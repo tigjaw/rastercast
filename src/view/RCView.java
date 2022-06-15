@@ -25,7 +25,6 @@ public class RCView {
 	private JButton openButton, saveButton;
 	private JCheckBox deleteCheckBox;
 	private JTextArea logArea;
-	private JFileChooser fileChooser;
 	private JComboBox<String> fileTypeComboBox;
 
 	public RCView() {
@@ -68,11 +67,10 @@ public class RCView {
 		// create UI components
 		logArea = ComponentFactory.createLogArea();
 
-		fileChooser = ComponentFactory.createFileChooser();
-		fileTypeComboBox = ComponentFactory.createFileTypeComboBox();
-
 		openButton = ComponentFactory.createOpenButton();
 		saveButton = ComponentFactory.createSaveButton();
+
+		fileTypeComboBox = ComponentFactory.createFileTypeComboBox();
 		deleteCheckBox = ComponentFactory.createCheckBox();
 
 		// create UI panels
@@ -124,6 +122,7 @@ public class RCView {
 	// CONTROLLER METHODS
 
 	private void loadImages() {
+		JFileChooser fileChooser = ComponentFactory.createFileChooser();
 		final int returnVal = fileChooser.showOpenDialog(mainPanel);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			log(controller.loadImages(fileChooser.getSelectedFiles()));
@@ -160,78 +159,6 @@ public class RCView {
 
 	public void setController(RCController controller) {
 		this.controller = controller;
-	}
-
-	public JPanel getMainPanel() {
-		return mainPanel;
-	}
-
-	public void setMainPanel(JPanel mainPanel) {
-		this.mainPanel = mainPanel;
-	}
-
-	public JPanel getButtonPanel() {
-		return buttonPanel;
-	}
-
-	public void setButtonPanel(JPanel buttonPanel) {
-		this.buttonPanel = buttonPanel;
-	}
-
-	public JScrollPane getLogScrollPane() {
-		return logScrollPane;
-	}
-
-	public void setLogScrollPane(JScrollPane logScrollPane) {
-		this.logScrollPane = logScrollPane;
-	}
-
-	public JButton getOpenButton() {
-		return openButton;
-	}
-
-	public void setOpenButton(JButton openButton) {
-		this.openButton = openButton;
-	}
-
-	public JButton getSaveButton() {
-		return saveButton;
-	}
-
-	public void setSaveButton(JButton saveButton) {
-		this.saveButton = saveButton;
-	}
-
-	public JCheckBox getDeleteCheckBox() {
-		return deleteCheckBox;
-	}
-
-	public void setDeleteCheckBox(JCheckBox deleteCheckBox) {
-		this.deleteCheckBox = deleteCheckBox;
-	}
-
-	public JTextArea getLogArea() {
-		return logArea;
-	}
-
-	public void setLogArea(JTextArea logArea) {
-		this.logArea = logArea;
-	}
-
-	public JFileChooser getFileChooser() {
-		return fileChooser;
-	}
-
-	public void setFileChooser(JFileChooser fileChooser) {
-		this.fileChooser = fileChooser;
-	}
-
-	public JComboBox<String> getFileTypeComboBox() {
-		return fileTypeComboBox;
-	}
-
-	public void setFileTypeComboBox(JComboBox<String> fileTypeComboBox) {
-		this.fileTypeComboBox = fileTypeComboBox;
 	}
 
 }
