@@ -29,18 +29,15 @@ public class IconButton extends JButton {
 		this(toolTipText, true, path);
 	}
 
-	/** Set ToolTip. Set Opacity. No Main Icon Path.
-	 * @param toolTipText
-	 * @param isOpaque */
-	public IconButton(String toolTipText, boolean isOpaque) {
-		paint(isOpaque);
-		if (toolTipText != null) {
-			setToolTipText(toolTipText);
-		}
+	public IconButton(String text, String path, String rolloverPath, String pressedPath) {
+		this(text, true, path, rolloverPath, pressedPath);
 	}
 
-	public IconButton(String toolTipText, boolean isOpaque, String... paths) {
-		this(toolTipText, isOpaque);
+	public IconButton(String text, boolean isOpaque, String... paths) {
+		paint(isOpaque);
+		if (text != null) {
+			setToolTipText(text);
+		}
 		if (paths != null) {
 			if (paths.length > 0) {
 				addIcon(paths[0]);

@@ -11,25 +11,22 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import controller.BatchImage;
 import controller.RCController;
+import core.RasterCast;
 import utils.RCStrings;
 
-public class RCView {
+public class RCView extends ComponentCreator {
 	private RCController controller;
-	private JPanel mainPanel, buttonPanel;
-	private JScrollPane logScrollPane;
-	private JButton openButton, saveButton;
-	private JCheckBox deleteCheckBox;
-	private JTextArea logArea;
-	private JComboBox<String> fileTypeComboBox;
-
-	public RCView() {
-		this(new RCController());
-	}
+	private JFrame frame;
+	private JPanel mainPanel, buttonPanel, batchPanel;
+	private JScrollPane batchScroller;
+	private JButton addToBatchBtn, clearBatchBtn, saveBatchBtn;
+	private JComboBox<String> formatComboBox;
+	private JCheckBox deleteOriginalsCheckBox;
 
 	public RCView(RCController controller) {
 		this.controller = controller;
@@ -64,91 +61,130 @@ public class RCView {
 	}
 
 	private void createComponents() {
-		// create UI components
-		logArea = ComponentFactory.createLogArea();
+		// buttons - building the batch
+		addToBatchBtn = createAddToBatchButton();
+		clearBatchBtn = createClearBatchButton();
+		saveBatchBtn = createSaveBatchButton();
 
-		openButton = ComponentFactory.createOpenButton();
-		saveButton = ComponentFactory.createSaveButton();
+		// options - batch operations
+		formatComboBox = new JComboBox<String>(RasterCast.formatsAsArray());
+		deleteOriginalsCheckBox = createCheckBox();
 
-		fileTypeComboBox = ComponentFactory.createFileTypeComboBox();
-		deleteCheckBox = ComponentFactory.createCheckBox();
-
-		// create UI panels
-		mainPanel = ComponentFactory.createMainPanel();
-		buttonPanel = ComponentFactory.createPanel();
-		logScrollPane = ComponentFactory.createScrollePane(logArea);
+		// panels - containing the UI
+		mainPanel = new JPanel(new BorderLayout());
+		buttonPanel = new JPanel();
+		batchPanel = createBatchPanel();
+		batchScroller = createScrollPane(batchPanel);
 	}
 
 	private void addComponents() {
-		// add components to panels
-		buttonPanel.add(openButton);
-		buttonPanel.add(saveButton);
-		buttonPanel.add(fileTypeComboBox);
-		buttonPanel.add(deleteCheckBox);
+		// add buttons
+		buttonPanel.add(addToBatchBtn);
+		buttonPanel.add(clearBatchBtn);
+		buttonPanel.add(saveBatchBtn);
 
+		// add batch options
+		buttonPanel.add(formatComboBox);
+		buttonPanel.add(deleteOriginalsCheckBox);
+
+		// add panels
 		mainPanel.add(buttonPanel, BorderLayout.PAGE_START);
-		mainPanel.add(logScrollPane, BorderLayout.CENTER);
+		mainPanel.add(batchScroller, BorderLayout.CENTER);
 	}
 
 	public void addActions() {
 
-		openButton.addActionListener(new ActionListener() {
+		addToBatchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				loadImages();
+				update(State.OPEN);
 			}
 		});
 
-		saveButton.addActionListener(new ActionListener() {
+		clearBatchBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveImages();
-				deleteOriginals();
+				update(State.CLEAR);
+			}
+		});
+
+		saveBatchBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				update(State.SAVE);
 			}
 		});
 	}
 
 	private void showFrame() {
-		JFrame frame = new JFrame(RCStrings.TITLE);
+		frame = new JFrame(RCStrings.TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.add(mainPanel);
 
 		frame.setLocationRelativeTo(null);
-		frame.pack();
+		repack();
 		frame.setVisible(true);
+	}
+
+	private enum State {
+		OPEN, CLEAR, SAVE;
+	}
+
+	private void update(State state) {
+		switch (state) {
+			case OPEN:
+				loadImages();
+				break;
+			case CLEAR:
+				createNewBatch();
+				break;
+			case SAVE:
+				saveImages();
+				break;
+		}
+		updateBatchView();
+	}
+
+	private void updateBatchView() {
+		// update the batch view
+		batchPanel.removeAll();
+		for (BatchImage image : controller.getBatch()) {
+			ImageView imageView = new ImageView(this, image);
+			batchPanel.add(imageView);
+		}
+		repack();
+	}
+
+	private void repack() {
+		frame.revalidate();
+		frame.repaint();
+		frame.pack();
 	}
 
 	// CONTROLLER METHODS
 
 	private void loadImages() {
-		JFileChooser fileChooser = ComponentFactory.createFileChooser();
+		JFileChooser fileChooser = createFileChooser();
 		final int returnVal = fileChooser.showOpenDialog(mainPanel);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			log(controller.loadImages(fileChooser.getSelectedFiles()));
-		} else {
-			log("\nNo Files Selected.");
+			controller.loadImages(fileChooser.getSelectedFiles());
 		}
 	}
 
+	private void createNewBatch() {
+		controller = new RCController();
+	}
+
 	private void saveImages() {
-		String imageFormat = (String) fileTypeComboBox.getSelectedItem();
-		String log = controller.saveImages(imageFormat);
-		log(log);
+		String imageFormat = getSelectedFormat();
+		controller.saveImages(imageFormat);
+		boolean deleteOriginals = deleteOriginalsCheckBox.isSelected();
+		controller.deleteImages(deleteOriginals);
 	}
 
-	private void deleteOriginals() {
-		boolean deleteOrignals = deleteCheckBox.isSelected();
-		String log = controller.deleteImages(deleteOrignals);
-		log(log);
-	}
-
-	// LOG
-
-	/** Logs info to Log JTextArea
-	 * @param logThis (String) - text to log */
-	private void log(String logThis) {
-		logArea.append(logThis + "\n");
+	protected String getSelectedFormat() {
+		return (String) formatComboBox.getSelectedItem();
 	}
 
 	// GETTERS & SETTERS
@@ -159,6 +195,14 @@ public class RCView {
 
 	public void setController(RCController controller) {
 		this.controller = controller;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 
 }

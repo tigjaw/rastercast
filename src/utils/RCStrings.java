@@ -31,6 +31,12 @@ public class RCStrings {
 	public final static String ICON_OPEN_ROLLOVER = ICON_OPEN + ICON_ROLLOVER + ICON_FILETYPE;
 	public final static String ICON_OPEN_PRESSED = ICON_OPEN + ICON_PRESSED + ICON_FILETYPE;
 
+	/** location for "clear" button icon */
+	private final static String ICON_CLEAR = DIR_RES + "icon_reset";
+	public final static String ICON_CLEAR_MAIN = ICON_CLEAR + ICON_FILETYPE;
+	public final static String ICON_CLEAR_ROLLOVER = ICON_CLEAR + ICON_ROLLOVER + ICON_FILETYPE;
+	public final static String ICON_CLEAR_PRESSED = ICON_CLEAR + ICON_PRESSED + ICON_FILETYPE;
+
 	/** location for "save" button icon */
 	private final static String ICON_SAVE = DIR_RES + "icon_save";
 	public final static String ICON_SAVE_MAIN = ICON_SAVE + ICON_FILETYPE;
@@ -44,6 +50,8 @@ public class RCStrings {
 
 	/** text for "open" button */
 	public final static String TXT_OPEN = "Open " + TXT_FILE + "...";
+	/** text for "open" button */
+	public final static String TXT_CLEAR = "Clear " + TXT_FILE;
 	/** text for "save" button */
 	public final static String TXT_SAVE = "Save " + TXT_FILE + " as...";
 	/** Title text for FileFilter JFileChooser */

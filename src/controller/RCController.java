@@ -5,69 +5,53 @@ import java.util.LinkedList;
 import java.util.List;
 
 import core.RasterCast;
-import utils.RCLog;
 
 /** Controller for the RasterCast demo Application
  * @author <a href="https://github.com/tigjaw">Tigjaw</a> (Joshua Woodyatt)
  * @since 2022 */
 public class RCController {
-	private List<File> images;
-	private boolean deleteOriginals;
+	private List<BatchImage> batch;
 
 	// CONSTRUCTORS
 
 	public RCController() {
-		this.images = new LinkedList<>();
-		this.deleteOriginals = false;
+		batch = new LinkedList<BatchImage>();
 	}
 
 	// CONTROLLER METHODS
 
-	public String loadImages(File[] selectedImages) {
-		RCLog.action("Opened:");
-		RCLog.actionFails("Failed to open:");
-
-		images = new LinkedList<>();
-
+	public boolean loadImages(File[] selectedImages) {
+		boolean loaded = false;
 		for (File image : selectedImages) {
-			boolean loaded = false;
 			String fileName = image.getName();
 			if (isCompatible(fileName)) {
-				images.add(image);
+				batch.add(new BatchImage(image));
 				loaded = true;
 			}
-			RCLog.log(fileName, loaded);
 		}
-		return RCLog.asString();
+		return loaded;
 	}
 
-	public String saveImages(String imageFormat) {
-		RCLog.action("Saved:");
-		RCLog.actionFails("Failed to save:");
-
-		for (File file : images) {
-			File output = createNewFile(file, imageFormat);
-			boolean written = false;
-			written = write(file, imageFormat, output);
-			RCLog.log(output.getName(), written);
+	public boolean saveImages(String imageFormat) {
+		boolean written = false;
+		for (BatchImage image : batch) {
+			File intput = image.getFile();
+			File output = createNewFile(intput, imageFormat);
+			written = write(intput, imageFormat, output);
 		}
-
-		return RCLog.asString();
+		return written;
 	}
 
 	/** Deletes the original files
 	 * @param delete (boolean) - delete files if true
 	 * @return (String) - text to log */
-	public String deleteImages(boolean delete) {
-		RCLog.action("Deleted Originals.");
+	public boolean deleteImages(boolean delete) {
 		if (delete) {
-			for (File image : images) {
-				image.delete();
+			for (BatchImage image : batch) {
+				image.getFile().delete();
 			}
-		} else {
-			RCLog.action("Kept Originals.");
 		}
-		return RCLog.getACTION();
+		return delete;
 	}
 
 	// RASTERCAST METHODS
@@ -91,20 +75,12 @@ public class RCController {
 
 	// GETTERS & SETTERS
 
-	public List<File> getImages() {
-		return images;
+	public List<BatchImage> getBatch() {
+		return batch;
 	}
 
-	public void setImages(List<File> images) {
-		this.images = images;
-	}
-
-	public boolean isDeleteOriginals() {
-		return deleteOriginals;
-	}
-
-	public void setDeleteOriginals(boolean deleteOriginals) {
-		this.deleteOriginals = deleteOriginals;
+	public void setBatch(List<BatchImage> batch) {
+		this.batch = batch;
 	}
 
 }
